@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.artear.youtubemediaapi.YouTubeMedia;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -27,5 +29,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        YouTubeMedia youTubeMedia = new YouTubeMedia();
     }
 }
