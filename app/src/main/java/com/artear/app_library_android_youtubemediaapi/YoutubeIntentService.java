@@ -6,6 +6,11 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.artear.app_library_android_youtubemediaapi.model.YoutubeCover;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -18,7 +23,7 @@ public class YoutubeIntentService extends IntentService {
     public static final String ACTION_ERROR = "com.artear.youtubemediaapi.action_error";
     public static final String ACTION_SUCCESS = "com.artear.youtubemediaapi.action_success";
 
-    public YoutubeIntentService(){
+    public YoutubeIntentService() {
         super("YoutubeIntentService");
     }
 
@@ -27,20 +32,32 @@ public class YoutubeIntentService extends IntentService {
 
         Intent intentResult = new Intent();
 
-        try{
+        try {
 
             String response = callYoutubeVideos();
 
-            if(response.isEmpty()){
+            if (response.isEmpty()) {
                 intentResult.setAction(ACTION_ERROR);
                 sendBroadcast(intentResult);
                 return;
             }
 
             Log.d("YoutubeIntentService", response);
-            intentResult.setAction(ACTION_SUCCESS);
 
-        }catch (Exception e){
+
+            JSONObject jsonObject = new JSONObject().getJSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("items");
+
+            for (int x = 0; x < jsonArray.length(); x++) {
+                JSONObject item = jsonArray.getJSONObject(x);
+                String id = item.getString("id");
+                JSONObject snippet = item.getJSONObject("snippet");
+                String title = snippet.getString("title");
+                String description = snippet.getString("description");
+                YoutubeCover youtubeCover = new YoutubeCover(id, title, description);
+            }
+            intentResult.setAction(ACTION_SUCCESS);
+        } catch (Exception e) {
             intentResult.setAction(ACTION_ERROR);
         }
 
@@ -55,7 +72,7 @@ public class YoutubeIntentService extends IntentService {
 
         Uri.Builder uriBuilder = Uri.parse(Api.BASE_URL).buildUpon();
         uriBuilder.appendQueryParameter("part", "snippet");
-        uriBuilder.appendQueryParameter("chart" ,"mostPopular" );
+        uriBuilder.appendQueryParameter("chart", "mostPopular");
         uriBuilder.appendQueryParameter("regionCode", "AR");
         uriBuilder.appendQueryParameter("maxResults", "25");
         uriBuilder.appendQueryParameter("key", DeveloperKey.GOOGLE_KEY);
