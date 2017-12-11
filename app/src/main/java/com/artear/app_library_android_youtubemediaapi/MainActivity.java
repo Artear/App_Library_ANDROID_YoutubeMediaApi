@@ -20,23 +20,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /*
-            void loadMock() throws {
-                guard let fileURL = Bundle.main.url(forResource: self.id, withExtension: "txt") else {
-                    throw errorType.unknown
-                }
-                self.content = try String(contentsOf: fileURL, encoding: String.Encoding.utf8).trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-        */
-
         loadMock();
     }
 
     private void loadMock(){
         try {
 
-            String fileName = "file2";
+            String fileName = "file";
             String article_only_title = TestUtils.loadJSONFromAsset(this, fileName +".txt");
             Log.e(TAG,article_only_title);
 
@@ -44,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
             Gson gson = new Gson();
             String json = gson.toJson(decode.parse());
+
             Log.e(TAG,"parse: \n" + decode.parse());
         }catch (Exception ex){
             Log.e(TAG,"FAIL");
