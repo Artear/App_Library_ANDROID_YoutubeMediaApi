@@ -4,11 +4,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.artear.youtubemediaapi.YoutubeDecode;
+import com.artear.youtubemediaapi.YoutubeErrorType;
 import com.artear.youtubemediaapi.exception.YoutubeMediaApiException;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,6 +17,7 @@ public class YoutubeMediaApi {
 
     private YouTubeMediaApiCallback youTubeMediaApiCallback;
     private String id = "";
+    private Exception error;
 
     public void run(String id, YouTubeMediaApiCallback youTubeMediaApiCallback) {
         this.id = id;
@@ -34,10 +34,9 @@ public class YoutubeMediaApi {
         protected String doInBackground(String... uri) {
 
 
-            String response = "";
+            StringBuilder response = new StringBuilder();
 
-            HttpURLConnection urlConnection = null;
-            InputStream inputStream = null;
+            HttpURLConnection urlConnection;
 
             String query_url = uri[0] + "?video_id=" + id;
             try {
@@ -61,20 +60,15 @@ public class YoutubeMediaApi {
 
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
-                        response += line;
+                        response.append(line);
                     }
                 } else {
                     Log.e("RequestTask", "Error response code: " + urlConnection.getResponseCode());
                 }
-
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-
-            } catch (Exception ignored) {
-
+            } catch (Exception ex) {
+                error = ex;
             }
-
-
-            return response;
+            return response.toString();
 
         }
 
@@ -82,10 +76,16 @@ public class YoutubeMediaApi {
         protected void onPostExecute(String result) {
             Log.d("YoutubeMediaApi", "result: " + result);
             super.onPostExecute(result);
-            try {
-                youTubeMediaApiCallback.onSuccess(new YoutubeDecode(id, result).parse());
-            } catch (YoutubeMediaApiException ex) {
-                youTubeMediaApiCallback.onError(ex);
+            if (error == null) {
+                try {
+                    youTubeMediaApiCallback.onSuccess(new YoutubeDecode(id, result).parse());
+                } catch (YoutubeMediaApiException ex) {
+                    youTubeMediaApiCallback.onError(ex);
+                }
+            } else {
+                YoutubeMediaApiException exception = new YoutubeMediaApiException(YoutubeErrorType.UNKNOWN);
+                exception.setStackTrace(error.getStackTrace());
+                youTubeMediaApiCallback.onError(exception);
             }
 
             //Do anything with response..
