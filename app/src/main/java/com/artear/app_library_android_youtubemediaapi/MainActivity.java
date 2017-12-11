@@ -1,15 +1,16 @@
 package com.artear.app_library_android_youtubemediaapi;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 
-import com.artear.youtubemediaapi.YouTubeMedia;
+import com.artear.youtubemediaapi.YoutubeDecode;
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final static String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,15 +21,33 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        /*
+            void loadMock() throws {
+                guard let fileURL = Bundle.main.url(forResource: self.id, withExtension: "txt") else {
+                    throw errorType.unknown
+                }
+                self.content = try String(contentsOf: fileURL, encoding: String.Encoding.utf8).trimmingCharacters(in: .whitespacesAndNewlines)
             }
-        });
+        */
 
-        YouTubeMedia youTubeMedia = new YouTubeMedia();
+        loadMock();
+    }
+
+    private void loadMock(){
+        try {
+
+            String fileName = "file2";
+            String article_only_title = TestUtils.loadJSONFromAsset(this, fileName +".txt");
+            Log.e(TAG,article_only_title);
+
+            YoutubeDecode decode = new YoutubeDecode(fileName,article_only_title);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(decode.parse());
+            Log.e(TAG,"parse: \n" + decode.parse());
+        }catch (Exception ex){
+            Log.e(TAG,"FAIL");
+            ex.printStackTrace();
+        }
     }
 }
