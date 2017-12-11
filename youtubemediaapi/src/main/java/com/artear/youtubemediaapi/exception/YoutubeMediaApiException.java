@@ -7,6 +7,11 @@ public class YoutubeMediaApiException extends Exception {
     private int code = 0;
     private String reason = "";
 
+    public YoutubeMediaApiException(YoutubeErrorType errorType) {
+        super(errorType.name());
+        this.errorType = errorType;
+    }
+
     public int getCode() {
         return code;
     }
@@ -23,13 +28,12 @@ public class YoutubeMediaApiException extends Exception {
         this.reason = reason;
     }
 
-    public YoutubeMediaApiException(YoutubeErrorType errorType) {
-        super(errorType.name());
-        this.errorType = errorType;
-    }
-
     @Override
     public String getMessage() {
         return errorType.name() + "_" + super.getMessage();
+    }
+
+    public YoutubeErrorType getErrorType() {
+        return errorType;
     }
 }

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.artear.app_library_android_youtubemediaapi">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".YoutubeMediaApiApp"
         android:allowBackup="true"

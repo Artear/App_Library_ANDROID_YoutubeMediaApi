@@ -33,7 +33,7 @@ public class YoutubeDecode {
             throw new YoutubeMediaApiException(YoutubeErrorType.WITHOUTDATA);
         }
 
-        Uri paramsYoutube = Uri.parse("http://yt?" + content);
+        Uri paramsYoutube = Uri.parse("http://artear-youtube.com.ar?" + content);
 
         if (paramsYoutube.getPath() == null) {
             throw new YoutubeMediaApiException(YoutubeErrorType.WITHQUERYITEMS);
@@ -56,11 +56,9 @@ public class YoutubeDecode {
                     exception.setCode(errorCode);
                     exception.setReason(errorReason);
                     throw exception;
-                } else {
-                    throw new YoutubeMediaApiException(YoutubeErrorType.UNKNOWN);
                 }
-
             }
+            throw new YoutubeMediaApiException(YoutubeErrorType.UNKNOWN);
         }
 
         YoutubeMetaData youtubeMetaData = new YoutubeMetaData(id);
@@ -88,9 +86,8 @@ public class YoutubeDecode {
                     if (value != null && !value.equals("")) {
 
                         youtubeMetaData.setMediaType(YoutubeMediaType.VIDEO);
-                        //Log.d("YoutubeDecode", "url_encoded_fmt_stream_map: ---------- " + value);
 
-                        Uri paramsYoutubeMap = Uri.parse("http://map?" + value);
+                        Uri paramsYoutubeMap = Uri.parse("http://artear-youtube.com.ar?" + value);
 
                         List<String> qualityList = paramsYoutubeMap.getQueryParameters("quality");
                         List<String> urlList = paramsYoutubeMap.getQueryParameters("url");
@@ -123,6 +120,7 @@ public class YoutubeDecode {
 
             }
         }
+
         youtubeMetaData.setYoutubeMedia(
                 new YoutubeMedia(
                         sources.toArray(
@@ -130,40 +128,8 @@ public class YoutubeDecode {
                         )
                 )
         );
+
         return youtubeMetaData;
-            /*guard let value = item.value else {
-                continue
-            }
 
-            switch item.name {
-                case "title":
-                    YTModel.title = value.replacingOccurrences(of: "+", with: " ")
-                    break
-                case "keywords":
-                    YTModel.keywords = value.components(separatedBy: ",").map({ (d) -> String in
-                    return d.replacingOccurrences(of: "+", with: " ")
-                })
-                break
-                case "player_response":
-                    guard
-                    let response = value.toJson(),
-                    let videoDetails = response["videoDetails"] as? [Any]
-                    else {
-                    continue
-                }
-                print(response)
-                break
-                default:
-                    print("> NAME --------------------------")
-                    print("> \(item.name)")
-                    print("> VALUE -------------------------")
-                    print("> \(value)")
-                    print("> -------------------------------")
-                    print(" ")
-                    break
-            }
-        }
-
-        return YTModel*/
     }
 }

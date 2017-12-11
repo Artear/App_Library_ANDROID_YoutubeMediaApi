@@ -6,6 +6,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.artear.youtubemediaapi.YoutubeDecode;
+import com.artear.youtubemediaapi.exception.YoutubeMediaApiException;
+import com.artear.youtubemediaapi.model.YoutubeMetaData;
+import com.artear.youtubemediaapi.network.YouTubeMediaApiCallback;
+import com.artear.youtubemediaapi.network.YoutubeMediaApi;
 import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +24,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        loadMock();
+
+
+        new YoutubeMediaApi().run("qQTVuRrZO8w", new YouTubeMediaApiCallback() {
+            @Override
+            public void onSuccess(YoutubeMetaData youtubeMetaData) {
+                Log.d("MainActivity", "onSucess");
+
+            }
+
+            @Override
+            public void onError(YoutubeMediaApiException youtubeMediaApiException) {
+
+                switch (youtubeMediaApiException.getErrorType()) {
+
+                    case UNKNOWN:
+                        Log.e("MainActivity", "UNKNOWN");
+                        break;
+                    case WITHOUTDATA:
+                        Log.e("MainActivity", "WITHOUTDATA");
+                        break;
+                    case WITHQUERYITEMS:
+                        Log.e("MainActivity", "WITHQUERYITEMS");
+                        break;
+                    case SERVER_ERROR:
+                        Log.e("MainActivity", "SERVER_ERROR");
+                        break;
+                }
+            }
+        });
+        //loadMock();
     }
 
     private void loadMock(){
@@ -34,10 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
             Gson gson = new Gson();
             String json = gson.toJson(decode.parse());
-
             Log.e(TAG,"parse: \n" + decode.parse());
         }catch (Exception ex){
-            Log.e(TAG,"FAIL");
             ex.printStackTrace();
         }
     }
