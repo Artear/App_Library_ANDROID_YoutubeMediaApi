@@ -1,10 +1,19 @@
 package com.artear.app_library_android_youtubemediaapi;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.artear.app_library_android_youtubemediaapi.adapter.YoutubeListAdapter;
+import com.artear.app_library_android_youtubemediaapi.adapter.YoutubeListListener;
+import com.artear.app_library_android_youtubemediaapi.model.YoutubeCover;
 import com.artear.youtubemediaapi.YoutubeDecode;
 import com.artear.youtubemediaapi.exception.YoutubeMediaApiException;
 import com.artear.youtubemediaapi.model.YoutubeMetaData;
@@ -12,9 +21,10 @@ import com.artear.youtubemediaapi.network.YouTubeMediaApiCallback;
 import com.artear.youtubemediaapi.network.YoutubeMediaApi;
 import com.google.gson.Gson;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements YoutubeListListener {
 
     private final static String TAG = "MainActivity";
+    private YoutubeReceiver rcv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +35,51 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new YoutubeListAdapter(this));
 
-        new YoutubeMediaApi().run("qQTVuRrZO8w", new YouTubeMediaApiCallback() {
+        rcv = new YoutubeReceiver();
+
+        Intent msgIntent = new Intent(this, YoutubeIntentService.class);
+        startService(msgIntent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(YoutubeIntentService.ACTION_ERROR);
+        filter.addAction(YoutubeIntentService.ACTION_SUCCESS);
+        registerReceiver(rcv, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(rcv);
+    }
+
+    private void loadMock(){
+        try {
+
+            String fileName = "file";
+            String article_only_title = TestUtils.loadJSONFromAsset(this, fileName +".txt");
+            Log.e(TAG,article_only_title);
+
+            YoutubeDecode decode = new YoutubeDecode(fileName,article_only_title);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(decode.parse());
+            Log.e(TAG,"parse: \n" + decode.parse());
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onClickYouTubeCover(YoutubeCover youtubeCover) {
+        new YoutubeMediaApi().run(youtubeCover.getId(), new YouTubeMediaApiCallback() {
             @Override
             public void onSuccess(YoutubeMetaData youtubeMetaData) {
                 Log.d("MainActivity", "onSucess");
@@ -53,23 +106,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        //loadMock();
     }
 
-    private void loadMock(){
-        try {
+    class YoutubeReceiver extends BroadcastReceiver {
 
-            String fileName = "file";
-            String article_only_title = TestUtils.loadJSONFromAsset(this, fileName +".txt");
-            Log.e(TAG,article_only_title);
+        @Override
+        public void onReceive(Context context, Intent intent) {
 
-            YoutubeDecode decode = new YoutubeDecode(fileName,article_only_title);
-
-            Gson gson = new Gson();
-            String json = gson.toJson(decode.parse());
-            Log.e(TAG,"parse: \n" + decode.parse());
-        }catch (Exception ex){
-            ex.printStackTrace();
         }
     }
+
 }
