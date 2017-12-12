@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
 
     @Override
     public void onClickYouTubeCover(YoutubeCover youtubeCover) {
-        new YoutubeMetadataApi().run(youtubeCover.getId(), new YouTubeMetadataApiCallback() {
+        new YoutubeMetadataApi().getMetadata(youtubeCover.getId(), new YouTubeMetadataApiCallback() {
             @Override
             public void onSuccess(YoutubeMetaData youtubeMetaData) {
                 Log.d(TAG, "onSucess");
