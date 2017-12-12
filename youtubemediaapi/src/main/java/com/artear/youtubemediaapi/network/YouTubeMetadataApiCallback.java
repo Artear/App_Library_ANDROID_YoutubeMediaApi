@@ -7,7 +7,7 @@ import com.artear.youtubemediaapi.model.YoutubeMetaData;
  * Created by sergiobanares on 11/12/17.
  */
 
-public interface YouTubeMediaApiCallback {
+public interface YouTubeMetadataApiCallback {
     void onSuccess(YoutubeMetaData youtubeMetaData);
 
     void onError(YoutubeMediaApiException youtubeMediaApiException);

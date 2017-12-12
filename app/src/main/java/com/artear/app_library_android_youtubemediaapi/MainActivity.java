@@ -19,8 +19,8 @@ import com.artear.app_library_android_youtubemediaapi.model.YoutubeCover;
 import com.artear.youtubemediaapi.YoutubeDecode;
 import com.artear.youtubemediaapi.exception.YoutubeMediaApiException;
 import com.artear.youtubemediaapi.model.YoutubeMetaData;
-import com.artear.youtubemediaapi.network.YouTubeMediaApiCallback;
-import com.artear.youtubemediaapi.network.YoutubeMediaApi;
+import com.artear.youtubemediaapi.network.YouTubeMetadataApiCallback;
+import com.artear.youtubemediaapi.network.YoutubeMetadataApi;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -87,11 +87,11 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
 
     @Override
     public void onClickYouTubeCover(YoutubeCover youtubeCover) {
-        new YoutubeMediaApi().run(youtubeCover.getId(), new YouTubeMediaApiCallback() {
+        new YoutubeMetadataApi().run(youtubeCover.getId(), new YouTubeMetadataApiCallback() {
             @Override
             public void onSuccess(YoutubeMetaData youtubeMetaData) {
-                Log.d("MainActivity", "onSucess");
-                Toast.makeText(MainActivity.this, "Lunch Youtube video = "+ youtubeMetaData.getYoutubeMedia(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onSucess");
+Toast.makeText(MainActivity.this, "Lunch Youtube video = "+ youtubeMetaData.getYoutubeMedia(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -100,16 +100,16 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
                 switch (youtubeMediaApiException.getErrorType()) {
 
                     case UNKNOWN:
-                        Log.e("MainActivity", "UNKNOWN");
+                        Log.e(TAG, "UNKNOWN");
                         break;
                     case WITHOUTDATA:
-                        Log.e("MainActivity", "WITHOUTDATA");
+                        Log.e(TAG, "WITHOUTDATA");
                         break;
                     case WITHQUERYITEMS:
-                        Log.e("MainActivity", "WITHQUERYITEMS");
+                        Log.e(TAG, "WITHQUERYITEMS");
                         break;
                     case SERVER_ERROR:
-                        Log.e("MainActivity", "SERVER_ERROR");
+                        Log.e(TAG, "SERVER_ERROR");
                         break;
                 }
             }
