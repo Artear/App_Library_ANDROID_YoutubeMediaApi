@@ -1,4 +1,4 @@
-package com.artear.app_library_android_youtubemediaapi;
+package com.artear.app_library_android_youtubemediaapi.main;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,11 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.artear.app_library_android_youtubemediaapi.adapter.YoutubeListAdapter;
-import com.artear.app_library_android_youtubemediaapi.adapter.YoutubeListListener;
+import com.artear.app_library_android_youtubemediaapi.R;
+import com.artear.app_library_android_youtubemediaapi.VideoActivity;
+import com.artear.app_library_android_youtubemediaapi.main.adapter.YoutubeListAdapter;
+import com.artear.app_library_android_youtubemediaapi.main.adapter.YoutubeListListener;
 import com.artear.app_library_android_youtubemediaapi.model.YoutubeCover;
 import com.artear.youtubemediaapi.exception.YoutubeMediaApiException;
 import com.artear.youtubemediaapi.model.YoutubeMetaData;
+import com.artear.youtubemediaapi.model.YoutubeSource;
 import com.artear.youtubemediaapi.network.YouTubeMetadataApiCallback;
 import com.artear.youtubemediaapi.network.YoutubeMetadataApi;
 
@@ -72,8 +75,21 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
             @Override
             public void onSuccess(YoutubeMetaData youtubeMetaData) {
                 Log.d(TAG, "onSucess");
-                Toast.makeText(MainActivity.this, "Lunch Youtube video = "+
-                        youtubeMetaData.getYoutubeMedia(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+
+
+                YoutubeSource[] sources = youtubeMetaData.getYoutubeMedia().getSource();
+
+                YoutubeSource youtubeSource = null;
+
+                if (sources.length > 0) {
+                    youtubeSource = sources[0];
+                    intent.putExtra(VideoActivity.YOUTUBE_URL, youtubeSource.getUrl());
+                    startActivity(intent);
+                } else {
+                    Log.e(TAG, "Sources is empty");
+                }
+
             }
 
             @Override

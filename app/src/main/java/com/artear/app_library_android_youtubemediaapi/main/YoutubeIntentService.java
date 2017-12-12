@@ -1,4 +1,4 @@
-package com.artear.app_library_android_youtubemediaapi;
+package com.artear.app_library_android_youtubemediaapi.main;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.artear.app_library_android_youtubemediaapi.Api;
+import com.artear.app_library_android_youtubemediaapi.DeveloperKey;
 import com.artear.app_library_android_youtubemediaapi.model.YoutubeCover;
 
 import org.json.JSONArray;

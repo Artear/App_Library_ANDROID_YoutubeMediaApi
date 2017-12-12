@@ -14,6 +14,14 @@ public class YoutubeSource {
         this.quality = quality;
     }
 
+    public QualityType getQuality() {
+        return quality;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
     @Override
     public String toString() {
         return "YoutubeSource{" +

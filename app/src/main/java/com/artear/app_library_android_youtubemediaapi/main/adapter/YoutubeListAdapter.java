@@ -1,4 +1,4 @@
-package com.artear.app_library_android_youtubemediaapi.adapter;
+package com.artear.app_library_android_youtubemediaapi.main.adapter;
 
 
 import android.support.v7.widget.RecyclerView;
@@ -56,7 +56,7 @@ public class YoutubeListAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public class YoutubeCoverViewHolder extends RecyclerView.ViewHolder{
+    public class YoutubeCoverViewHolder extends RecyclerView.ViewHolder {
 
         final TextView titleTextView;
         final TextView descriptionTextView;

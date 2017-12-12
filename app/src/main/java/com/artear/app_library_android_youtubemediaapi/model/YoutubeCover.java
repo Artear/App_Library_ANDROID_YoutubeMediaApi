@@ -4,8 +4,19 @@ package com.artear.app_library_android_youtubemediaapi.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class YoutubeCover implements Parcelable{
+public class YoutubeCover implements Parcelable {
 
+    public static final Creator<YoutubeCover> CREATOR = new Creator<YoutubeCover>() {
+        @Override
+        public YoutubeCover createFromParcel(Parcel in) {
+            return new YoutubeCover(in.readString(), in.readString(), in.readString());
+        }
+
+        @Override
+        public YoutubeCover[] newArray(int size) {
+            return new YoutubeCover[size];
+        }
+    };
     private String id;
     private String title;
     private String description;
@@ -51,16 +62,4 @@ public class YoutubeCover implements Parcelable{
         dest.writeString(title);
         dest.writeString(description);
     }
-
-    public static final Creator<YoutubeCover> CREATOR = new Creator<YoutubeCover>() {
-        @Override
-        public YoutubeCover createFromParcel(Parcel in) {
-            return new YoutubeCover(in.readString(), in.readString(), in.readString());
-        }
-
-        @Override
-        public YoutubeCover[] newArray(int size) {
-            return new YoutubeCover[size];
-        }
-    };
 }
