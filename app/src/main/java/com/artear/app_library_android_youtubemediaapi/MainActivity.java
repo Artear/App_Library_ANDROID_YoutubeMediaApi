@@ -16,12 +16,10 @@ import android.widget.Toast;
 import com.artear.app_library_android_youtubemediaapi.adapter.YoutubeListAdapter;
 import com.artear.app_library_android_youtubemediaapi.adapter.YoutubeListListener;
 import com.artear.app_library_android_youtubemediaapi.model.YoutubeCover;
-import com.artear.youtubemediaapi.YoutubeDecode;
 import com.artear.youtubemediaapi.exception.YoutubeMediaApiException;
 import com.artear.youtubemediaapi.model.YoutubeMetaData;
 import com.artear.youtubemediaapi.network.YouTubeMetadataApiCallback;
 import com.artear.youtubemediaapi.network.YoutubeMetadataApi;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -68,30 +66,14 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
         unregisterReceiver(rcv);
     }
 
-    private void loadMock() {
-        try {
-
-            String fileName = "file";
-            String article_only_title = TestUtils.loadJSONFromAsset(this, fileName + ".txt");
-            Log.e(TAG, article_only_title);
-
-            YoutubeDecode decode = new YoutubeDecode(fileName, article_only_title);
-
-            Gson gson = new Gson();
-            String json = gson.toJson(decode.parse());
-            Log.e(TAG, "parse: \n" + decode.parse());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     @Override
     public void onClickYouTubeCover(YoutubeCover youtubeCover) {
         new YoutubeMetadataApi().getMetadata(youtubeCover.getId(), new YouTubeMetadataApiCallback() {
             @Override
             public void onSuccess(YoutubeMetaData youtubeMetaData) {
                 Log.d(TAG, "onSucess");
-Toast.makeText(MainActivity.this, "Lunch Youtube video = "+ youtubeMetaData.getYoutubeMedia(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Lunch Youtube video = "+
+                        youtubeMetaData.getYoutubeMedia(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
