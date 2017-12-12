@@ -2,10 +2,14 @@ package com.artear.youtubemediaapi.model;
 
 public class YoutubeMedia {
 
-    YoutubeSource[] source;
+    private YoutubeSource[] source;
 
     public YoutubeMedia(YoutubeSource[] source) {
         this.source = source;
+    }
+
+    public YoutubeSource[] getSource() {
+        return source;
     }
 
     @Override
