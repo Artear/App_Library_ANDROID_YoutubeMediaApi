@@ -48,25 +48,32 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
                 DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
 
-        rcv = new YoutubeReceiver();
-
-        Intent msgIntent = new Intent(this, YoutubeIntentService.class);
-        startService(msgIntent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(YoutubeIntentService.ACTION_ERROR);
-        filter.addAction(YoutubeIntentService.ACTION_SUCCESS);
-        registerReceiver(rcv, filter);
+
+        if (adapter.getItemCount() == 0) {
+            Intent msgIntent = new Intent(this, YoutubeIntentService.class);
+            startService(msgIntent);
+
+            rcv = new YoutubeReceiver();
+
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(YoutubeIntentService.ACTION_ERROR);
+            filter.addAction(YoutubeIntentService.ACTION_SUCCESS);
+            registerReceiver(rcv, filter);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(rcv);
+        if (rcv != null) {
+            unregisterReceiver(rcv);
+            rcv = null;
+        }
     }
 
     @Override
@@ -75,21 +82,17 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
             @Override
             public void onSuccess(YoutubeMetaData youtubeMetaData) {
                 Log.d(TAG, "onSucess");
-                Intent intent = new Intent();
-
-
                 YoutubeSource[] sources = youtubeMetaData.getYoutubeMedia().getSource();
 
-                YoutubeSource youtubeSource = null;
-
                 if (sources.length > 0) {
-                    youtubeSource = sources[0];
+                    YoutubeSource youtubeSource = sources[0];
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, VideoActivity.class);
                     intent.putExtra(VideoActivity.YOUTUBE_URL, youtubeSource.getUrl());
                     startActivity(intent);
                 } else {
                     Log.e(TAG, "Sources is empty");
                 }
-
             }
 
             @Override
