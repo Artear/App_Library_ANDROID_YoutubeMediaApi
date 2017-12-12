@@ -48,7 +48,7 @@ public class YoutubeIntentService extends IntentService {
 
             Log.d("YoutubeIntentService", response);
 
-            JSONObject jsonObject = new JSONObject().getJSONObject(response);
+            JSONObject jsonObject = new JSONObject(response);
             JSONArray jsonArray = jsonObject.getJSONArray("items");
 
             List<YoutubeCover> youtubeCoverList = new ArrayList<>();

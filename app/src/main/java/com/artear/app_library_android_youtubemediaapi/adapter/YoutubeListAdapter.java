@@ -10,13 +10,14 @@ import android.widget.TextView;
 import com.artear.app_library_android_youtubemediaapi.R;
 import com.artear.app_library_android_youtubemediaapi.model.YoutubeCover;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class YoutubeListAdapter extends RecyclerView.Adapter {
 
 
     private YoutubeListListener youtubeListListener;
-    private List<YoutubeCover> list;
+    private List<YoutubeCover> list = new ArrayList<>();
 
     public YoutubeListAdapter(YoutubeListListener youtubeListListener) {
         this.youtubeListListener = youtubeListListener;
@@ -47,7 +48,7 @@ public class YoutubeListAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list.size();
     }
 
     public void setList(List<YoutubeCover> list) {
