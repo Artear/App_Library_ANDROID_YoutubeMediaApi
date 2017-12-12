@@ -12,10 +12,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-/**
- * Created by sergiobanares on 12/12/17.
- */
-
 public class YoutubeMetadataApi {
     YoutubeMetadataApiInterface service;
 

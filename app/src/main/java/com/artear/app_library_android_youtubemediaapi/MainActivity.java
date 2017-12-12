@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         YoutubeMetadataApi api = new YoutubeMetadataApi();
-        api.getMetadata("qQTVuRrZO8w", new YouTubeMetadataApiCallback() {
+        api.getMetadata("sTiKv0rK9OE", new YouTubeMetadataApiCallback() {
             @Override
             public void onSuccess(YoutubeMetaData youtubeMetaData) {
                 Log.d(TAG, "onSucess");

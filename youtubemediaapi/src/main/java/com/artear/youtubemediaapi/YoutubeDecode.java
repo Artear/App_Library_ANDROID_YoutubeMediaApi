@@ -84,7 +84,7 @@ public class YoutubeDecode {
                 case "url_encoded_fmt_stream_map": {
 
                     if (value != null && !value.equals("")) {
-
+                        value = value.replace(",", "&");
                         youtubeMetaData.setMediaType(YoutubeMediaType.VIDEO);
 
                         Uri paramsYoutubeMap = Uri.parse("http://artear-youtube.com.ar?" + value);
