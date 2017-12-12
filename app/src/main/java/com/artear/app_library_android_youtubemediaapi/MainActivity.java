@@ -5,12 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
-import com.artear.youtubemediaapi.YoutubeDecode;
 import com.artear.youtubemediaapi.exception.YoutubeMediaApiException;
 import com.artear.youtubemediaapi.model.YoutubeMetaData;
-import com.artear.youtubemediaapi.network.YouTubeMediaApiCallback;
-import com.artear.youtubemediaapi.network.YoutubeMediaApi;
-import com.google.gson.Gson;
+import com.artear.youtubemediaapi.network.YouTubeMetadataApiCallback;
+import com.artear.youtubemediaapi.network.YoutubeMetadataApi;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,11 +24,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        new YoutubeMediaApi().run("qQTVuRrZO8w", new YouTubeMediaApiCallback() {
+        YoutubeMetadataApi api = new YoutubeMetadataApi();
+        api.getMetadata("qQTVuRrZO8w", new YouTubeMetadataApiCallback() {
             @Override
             public void onSuccess(YoutubeMetaData youtubeMetaData) {
-                Log.d("MainActivity", "onSucess");
-
+                Log.d(TAG, "onSucess");
             }
 
             @Override
@@ -39,37 +37,20 @@ public class MainActivity extends AppCompatActivity {
                 switch (youtubeMediaApiException.getErrorType()) {
 
                     case UNKNOWN:
-                        Log.e("MainActivity", "UNKNOWN");
+                        Log.e(TAG, "UNKNOWN");
                         break;
                     case WITHOUTDATA:
-                        Log.e("MainActivity", "WITHOUTDATA");
+                        Log.e(TAG, "WITHOUTDATA");
                         break;
                     case WITHQUERYITEMS:
-                        Log.e("MainActivity", "WITHQUERYITEMS");
+                        Log.e(TAG, "WITHQUERYITEMS");
                         break;
                     case SERVER_ERROR:
-                        Log.e("MainActivity", "SERVER_ERROR");
+                        Log.e(TAG, "SERVER_ERROR");
                         break;
                 }
             }
         });
-        //loadMock();
     }
 
-    private void loadMock(){
-        try {
-
-            String fileName = "file";
-            String article_only_title = TestUtils.loadJSONFromAsset(this, fileName +".txt");
-            Log.e(TAG,article_only_title);
-
-            YoutubeDecode decode = new YoutubeDecode(fileName,article_only_title);
-
-            Gson gson = new Gson();
-            String json = gson.toJson(decode.parse());
-            Log.e(TAG,"parse: \n" + decode.parse());
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
 }
