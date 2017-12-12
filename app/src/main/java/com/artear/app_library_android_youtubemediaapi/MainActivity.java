@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.artear.app_library_android_youtubemediaapi.adapter.YoutubeListAdapter;
 import com.artear.app_library_android_youtubemediaapi.adapter.YoutubeListListener;
@@ -21,10 +23,13 @@ import com.artear.youtubemediaapi.network.YouTubeMediaApiCallback;
 import com.artear.youtubemediaapi.network.YoutubeMediaApi;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements YoutubeListListener {
 
     private final static String TAG = "MainActivity";
     private YoutubeReceiver rcv;
+    private YoutubeListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +42,10 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new YoutubeListAdapter(this));
+        adapter = new YoutubeListAdapter(this);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
+        recyclerView.setAdapter(adapter);
 
         rcv = new YoutubeReceiver();
 
@@ -60,19 +68,19 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
         unregisterReceiver(rcv);
     }
 
-    private void loadMock(){
+    private void loadMock() {
         try {
 
             String fileName = "file";
-            String article_only_title = TestUtils.loadJSONFromAsset(this, fileName +".txt");
-            Log.e(TAG,article_only_title);
+            String article_only_title = TestUtils.loadJSONFromAsset(this, fileName + ".txt");
+            Log.e(TAG, article_only_title);
 
-            YoutubeDecode decode = new YoutubeDecode(fileName,article_only_title);
+            YoutubeDecode decode = new YoutubeDecode(fileName, article_only_title);
 
             Gson gson = new Gson();
             String json = gson.toJson(decode.parse());
-            Log.e(TAG,"parse: \n" + decode.parse());
-        }catch (Exception ex){
+            Log.e(TAG, "parse: \n" + decode.parse());
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -83,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
             @Override
             public void onSuccess(YoutubeMetaData youtubeMetaData) {
                 Log.d("MainActivity", "onSucess");
-
+                Toast.makeText(MainActivity.this, "Lunch Youtube video = "+ youtubeMetaData.getYoutubeMedia(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -112,7 +120,13 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            if (YoutubeIntentService.ACTION_SUCCESS.equals(intent.getAction())) {
+                ArrayList<YoutubeCover> arrayList = intent.getParcelableArrayListExtra(
+                        YoutubeIntentService.YOUTUBE_COVER_LIST);
+                adapter.setList(arrayList);
+            } else if (YoutubeIntentService.ACTION_ERROR.equals(intent.getAction())) {
+                Toast.makeText(MainActivity.this, "Tarea finalizada!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

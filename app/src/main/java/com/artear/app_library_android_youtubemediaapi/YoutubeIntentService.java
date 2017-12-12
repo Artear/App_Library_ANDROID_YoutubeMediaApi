@@ -3,6 +3,7 @@ package com.artear.app_library_android_youtubemediaapi;
 import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -15,10 +16,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class YoutubeIntentService extends IntentService {
 
+    public static final String YOUTUBE_COVER_LIST = "youtube_cover_list";
 
     public static final String ACTION_ERROR = "com.artear.youtubemediaapi.action_error";
     public static final String ACTION_SUCCESS = "com.artear.youtubemediaapi.action_success";
@@ -44,9 +48,10 @@ public class YoutubeIntentService extends IntentService {
 
             Log.d("YoutubeIntentService", response);
 
-
             JSONObject jsonObject = new JSONObject().getJSONObject(response);
             JSONArray jsonArray = jsonObject.getJSONArray("items");
+
+            List<YoutubeCover> youtubeCoverList = new ArrayList<>();
 
             for (int x = 0; x < jsonArray.length(); x++) {
                 JSONObject item = jsonArray.getJSONObject(x);
@@ -54,9 +59,15 @@ public class YoutubeIntentService extends IntentService {
                 JSONObject snippet = item.getJSONObject("snippet");
                 String title = snippet.getString("title");
                 String description = snippet.getString("description");
-                YoutubeCover youtubeCover = new YoutubeCover(id, title, description);
+                youtubeCoverList.add(new YoutubeCover(id, title, description));
             }
+
+            Log.d("YoutubeIntentService", "Youtube cover Count: " + youtubeCoverList.size());
+
+            intentResult.putParcelableArrayListExtra(YOUTUBE_COVER_LIST,
+                    (ArrayList<? extends Parcelable>) youtubeCoverList);
             intentResult.setAction(ACTION_SUCCESS);
+
         } catch (Exception e) {
             intentResult.setAction(ACTION_ERROR);
         }
