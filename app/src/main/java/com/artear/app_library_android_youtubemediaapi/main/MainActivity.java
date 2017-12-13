@@ -112,7 +112,15 @@ public class MainActivity extends AppCompatActivity implements YoutubeListListen
                     case SERVER_ERROR:
                         Log.e(TAG, "SERVER_ERROR");
                         break;
+
                 }
+
+                String reason = !youtubeMediaApiException.getReason().isEmpty()?
+                        ". Reason: " + youtubeMediaApiException.getReason(): "";
+
+                Toast.makeText(MainActivity.this, "Error to load info " +
+                        "from video. Type: " + youtubeMediaApiException.getErrorType().toString()
+                        + reason, Toast.LENGTH_LONG).show();
             }
         });
     }
