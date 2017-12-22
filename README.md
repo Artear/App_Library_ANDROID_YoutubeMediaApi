@@ -10,12 +10,12 @@ via Maven:
 <dependency>
   <groupId>com.artear.youtubemediaapi</groupId>
   <artifactId>youtubemediaapi</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.artear.youtubemediaapi:youtubemediaapi:0.1.1'
+compile 'com.artear.youtubemediaapi:youtubemediaapi:0.1.2'
 ```
 Test Lib requires at minimum Java 7 or Android 4.1.
 
