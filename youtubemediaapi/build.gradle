@@ -15,7 +15,7 @@ ext {
     siteUrl = 'https://github.com/Artear/App_Library_ANDROID_YoutubeMediaApi'
     gitUrl = 'https://github.com/Artear/App_Library_ANDROID_YoutubeMediaApi.git'
 
-    libraryVersion = '0.1.1'
+    libraryVersion = '0.1.2'
 
     developerId = 'artear'
     developerName = 'Artear Moviles'
